@@ -1,0 +1,2 @@
+from loss_funcs.transfer_losses import TransferLoss
+from loss_funcs.ContrastiveLoss import ContrastiveLoss, SupConLoss
