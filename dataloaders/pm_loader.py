@@ -41,9 +41,9 @@ def get_pm_laoder(args, dataset, target, source_lists = None):
 
     loader_source = process_source_domains(
         args, 
-        data[np.in1d(subject_ids, source_lists)], 
-        one_hot_mat[np.in1d(subject_ids, source_lists)], 
-        subject_ids[np.in1d(subject_ids, source_lists)])
+        data[np.isin(subject_ids, source_lists)], 
+        one_hot_mat[np.isin(subject_ids, source_lists)], 
+        subject_ids[np.isin(subject_ids, source_lists)])
 
     return loader_source, loader_target
 
@@ -83,7 +83,7 @@ def process_target_domain(args, x_target, y_target):
     # print(EEG[target_mask].shape)
     n, x, y, c = perform_clustering(args, x_target, y_target)
     setattr(args, "num_of_t_clusters", n)
-    target_features = torch.from_numpy(x).type(torch.Tensor)
+    target_features = torch.from_numpy(x).to(torch.float32)
     target_labels = torch.from_numpy(y)
     target_cluster = torch.from_numpy(c)
     target_dataset = PMDataset(target_features, target_labels, target_cluster)
@@ -97,7 +97,6 @@ def process_target_domain(args, x_target, y_target):
     return target_loader
 
 def process_source_domains(args, x_source, y_source, s_source, noisy_level = 0.0):
-
     cluster_results = {}
     min_clusters = float('inf')
 
@@ -114,10 +113,10 @@ def process_source_domains(args, x_source, y_source, s_source, noisy_level = 0.0
         # 为了保证每一个source都具有相同的cluster数量，因此将具有多余cluster的数据过滤掉
         # Filters the data to ensure each subject has the same number of clusters.
         cluster_counts = Counter(c)
-        top_clusters = [cluster for cluster, _ in cluster_counts.most_common(min_clusters)]
+        top_clusters = [cluster for cluster, _ in cluster_counts.most_common(int(min_clusters))]
         mask = np.isin(c, top_clusters)
 
-        source_features = torch.from_numpy(x[mask]).type(torch.Tensor)
+        source_features = torch.from_numpy(x[mask]).to(torch.float32)
         # source_labels = torch.from_numpy(add_noise_to_labels(y[mask], noisy_level)).type(torch.Tensor)
         source_labels = torch.from_numpy(y[mask]) # .type(torch.Tensor)
         

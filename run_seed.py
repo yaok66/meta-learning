@@ -11,7 +11,7 @@ session = 1
 
 batch_size = 96
 
-tmp_saved_path = "C:\\Users\\86189\\Desktop\\0528-MaxUpLLLearning\\DG"
+tmp_saved_path = "D:\\Users\\86189\\Desktop\\0528-MaxUpLLLearning\\DG"
 command = (
     f"python meta_main.py "
     f"--seed {seed} "

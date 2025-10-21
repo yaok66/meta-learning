@@ -99,7 +99,7 @@ class MetaTrainer(object):
                 loss = functional_call(
                     self.model, fast_weights, (support_data, support_label)
                 )
-                grads = torch.autograd.grad(loss, fast_weights.values(), create_graph=True)
+                grads = torch.autograd.grad(loss, list(fast_weights.values()), create_graph=True)
                 fast_weights = {
                     name: param - self.inner_lr * grad
                     for (name, param), grad in zip(fast_weights.items(), grads)
