@@ -150,6 +150,3 @@ def process_source_domains(args, x_source, y_source, s_source, noisy_level = 0.0
     source_loaders = [source_loaders[n]] + source_loaders[:n] + source_loaders[n+1:]
 
     return source_loaders
-
-
-
