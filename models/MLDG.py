@@ -46,28 +46,7 @@ def linear(inputs, weight, bias, meta_step_size=0.001, meta_loss=None, stop_grad
         
         return F.linear(inputs, weight, bias)
 
-    def forward(self, x, meta_loss=None, meta_step_size=None, stop_gradient=False):
 
-        x = linear(inputs=x,
-                   weight=self.fc1.weight,
-                   bias=self.fc1.bias,
-                   meta_loss=meta_loss,
-                   meta_step_size=meta_step_size,
-                   stop_gradient=stop_gradient)
-
-        x = F.relu(x, inplace=True)
-
-        x = linear(inputs=x,
-                   weight=self.fc2.weight,
-                   bias=self.fc2.bias,
-                   meta_loss=meta_loss,
-                   meta_step_size=meta_step_size,
-                   stop_gradient=stop_gradient)
-
-        end_points = {'Predictions': F.softmax(input=x, dim=-1)}
-
-        return x, end_points
-    
 class FeatureExtractor(nn.Module):
     def __init__(self, input_dim=310, hidden_1=64, hidden_2=64):
         super(FeatureExtractor, self).__init__()
