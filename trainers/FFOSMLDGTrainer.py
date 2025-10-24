@@ -46,7 +46,6 @@ class FFOSMLDGTrainer(object):
     def train(self, source_loaders, target_loader):
         """
         使用 Fast First-Order S-MLDG (FFO-S-MLDG) 算法进行训练。
-        严格遵循论文中的 Algorithm 2。
         """
         stop = 0
         best_acc = 0.0

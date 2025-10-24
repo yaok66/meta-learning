@@ -14,8 +14,8 @@ from torch import nn
 import random
 
 from config import get_parser
-from models import Base, MaxUpLLL
-from trainers import  MetaTrainer, LLLTrainer, MaxUpLLLTrainer
+from models import Base, MaxUpLLL,MLDG
+from trainers import  MetaTrainer, LLLTrainer, MaxUpLLLTrainer ,FFOSMLDGTrainer,MLDGTrainer
 
 from dataloaders import get_mutlisource_laoder, get_dataset, get_maxuppm_laoder
 
@@ -67,7 +67,7 @@ def get_model_utils(args):
         "num_of_class": args.num_of_class,
     }
 
-    model = MaxUpLLL(**base_params).cuda()
+    model = MLDG(**base_params).cuda()
 
     # Optimizer
     params = model.get_parameters()
@@ -92,7 +92,7 @@ def get_model_utils(args):
     #     optimizer, 
     #     **trainer_params
     # )
-    trainer = MaxUpLLLTrainer(
+    trainer = MLDGTrainer(
         model, 
         optimizer, 
         **trainer_params
@@ -105,8 +105,8 @@ def train(dataset,  target, args):
     """
     # Set random seed for each subject
     setup_seed(args.seed)
-    source_loader, target_loader = get_maxuppm_laoder(args, dataset, target)
-    # source_loader, target_loader = get_mutlisource_laoder(args, dataset, target)
+    # source_loader, target_loader = get_maxuppm_laoder(args, dataset, target)
+    source_loader, target_loader = get_mutlisource_laoder(args, dataset, target)
 
     trainer = get_model_utils(args)
     

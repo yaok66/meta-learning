@@ -37,13 +37,13 @@ def get_base_laoder(args, dataset, target, source_lists = None):
     source_lists = np.array(source_lists)
 
     # 获得目标域数据
-    target_features = torch.from_numpy(data[subject_ids==target]).type(torch.Tensor)
-    target_labels = torch.from_numpy(one_hot_mat[subject_ids==target])
+    target_features = torch.from_numpy(data[subject_ids == target]).to(torch.float32)
+    target_labels = torch.from_numpy(one_hot_mat[subject_ids == target])
     torch_dataset_target = BaseDataset(target_features, target_labels)
     
     # 获得源域数据
-    source_features = torch.from_numpy(data[np.in1d(subject_ids, source_lists)]).type(torch.Tensor)
-    source_labels = torch.from_numpy(one_hot_mat[np.in1d(subject_ids, source_lists)])
+    source_features = torch.from_numpy(data[np.isin(subject_ids, source_lists)]).to(torch.float32)
+    source_labels = torch.from_numpy(one_hot_mat[np.isin(subject_ids, source_lists)])
     torch_dataset_source = BaseDataset(source_features, source_labels)
 
     loader_source = DataLoader(
@@ -70,14 +70,14 @@ def get_mutlisource_laoder(args, dataset, target, source_lists = None):
     source_lists = np.array(source_lists)
 
     # 获得目标域数据
-    target_features = torch.from_numpy(data[subject_ids==target]).type(torch.Tensor)
+    target_features = torch.from_numpy(data[subject_ids == target]).to(torch.float32)
     target_labels = torch.from_numpy(one_hot_mat[subject_ids==target])
     torch_dataset_target = BaseDataset(target_features, target_labels)
     
     # 获得每个源域的数据，分别生成 DataLoader
     loader_source = []
     for src in source_lists:
-        src_features = torch.from_numpy(data[subject_ids == src]).type(torch.Tensor)
+        src_features = torch.from_numpy(data[subject_ids == src]).to(torch.float32)
         src_labels = torch.from_numpy(one_hot_mat[subject_ids == src])
         torch_dataset_source = BaseDataset(src_features, src_labels)
         loader = DataLoader(

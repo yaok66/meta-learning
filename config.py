@@ -39,6 +39,10 @@ def get_parser():
     parser.add_argument('--num_of_subjects', type=int, default=15, help="受试者数量")
     parser.add_argument('--feature_dim', type=int, default=310)
 
+    # Meta-learning相关参数
+    parser.add_argument("--meta_step_size", type=float, default=0.0001,help='meta step size')
+    parser.add_argument("--meta_val_beta", type=float, default=0.0001,help='the strength of the meta val loss')
+
     # TODO SEED和SEED-IV Feature数据集
     parser.add_argument('--session', type=int, default=1, help="定义此次训练的session")
     parser.add_argument("--seed3_path", type=str, default = "D:\\EEG\\SEED\\ExtractedFeatures\\")
