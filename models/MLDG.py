@@ -83,9 +83,22 @@ class LabelClassifier(nn.Module):
         self.fc1 = nn.Linear(input_dim, 64)
         self.fc2 = nn.Linear(64, num_of_class)
     
-    def forward(self, feature):
-        y = self.fc1(feature)
-        return self.fc2(y)
+    def forward(self, feature, meta_loss=None, meta_step_size=None, stop_gradient=False):
+        step_size = meta_step_size if meta_step_size is not None else 1e-3
+        y = linear(inputs=feature,
+                   weight=self.fc1.weight, 
+                   bias=self.fc1.bias,
+                   meta_loss=meta_loss, 
+                   meta_step_size=step_size, 
+                   stop_gradient=stop_gradient)
+        y = F.relu(y)
+        logits = linear(inputs=y, 
+                        weight=self.fc2.weight, 
+                        bias=self.fc2.bias,
+                        meta_loss=meta_loss, 
+                        meta_step_size=step_size, 
+                        stop_gradient=stop_gradient)
+        return logits
     
     def predict(self, feature):
         with torch.no_grad():
@@ -112,12 +125,10 @@ class MLDG(nn.Module):
 
         self.feature_extractor = FeatureExtractor(input_dim=input_dim)
         self.classifier = LabelClassifier(input_dim=64, num_of_class=num_of_class)
-        
-        
         self.criterion = nn.CrossEntropyLoss()
-    def forward(self, source, source_label):
-        source_feature = self.feature_extractor(source)
-        source_output = self.classifier(source_feature)
+    def forward(self, source, source_label, meta_loss=None, meta_step_size=None, stop_gradient=False):
+        source_feature = self.feature_extractor(source, meta_loss, meta_step_size, stop_gradient)
+        source_output = self.classifier(source_feature, meta_loss, meta_step_size, stop_gradient)
         cls_loss = self.criterion(source_output, source_label)
 
         return cls_loss
