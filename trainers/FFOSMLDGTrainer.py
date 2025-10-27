@@ -65,6 +65,10 @@ class FFOSMLDGTrainer(object):
             # 3. 内循环 (Inner-loop update)
             # 按照随机顺序，依次在每个源域上更新 fast_weights
             inner_loss = torch.tensor(0.0) # 用于记录日志
+
+            #当处理序列中的第 i 个域时，计算出的梯度会更新 fast_weights。这个更新后的 fast_weights 会被用于处理序列中的第 i+1 个域，
+            #计算其损失和梯度。同理，第i+1个域的更新会影响第i+2个域，以此类推。这样，处理第n个域时的参数状态，已经累积了前面 n-1 
+            #个域的学习效果。
             for source_loader in shuffled_loaders:
                 # 从当前域获取一个批次的数据
                 try:

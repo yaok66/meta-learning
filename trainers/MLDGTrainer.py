@@ -12,7 +12,7 @@ class MLDGTrainer(object):
                  model,
                  optimizer,
                  inner_lr: float = 1e-3,
-                 meta_val_beta: float = 1.0,
+                 meta_val_beta: float = 0.0001,
                  max_iter: int = 1000,
                  log_interval: int = 1,
                  early_stop: int = 0,

@@ -92,7 +92,7 @@ def get_model_utils(args):
     #     optimizer, 
     #     **trainer_params
     # )
-    trainer = MLDGTrainer(
+    trainer = FFOSMLDGTrainer(
         model, 
         optimizer, 
         **trainer_params
